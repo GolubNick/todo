@@ -1,0 +1,43 @@
+body {
+    padding: 50px;
+}
+
+.app {
+    display: flex;
+}
+
+.form-block {
+    width: 40%;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.cards-block {
+    align-items: flex-start;
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    min-height: 220px;
+    width: 47%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.badge {
+    margin-bottom: 5px;
+}
+
+.card-text {
+    min-height: 100px;
+}
+
+.card .btn {
+    margin-bottom: 5px;
+}
+
+.form-edit-button {
+    display: none;
+}

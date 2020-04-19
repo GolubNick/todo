@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+<div id="app" class="app">
+    <div class="form-block">
+        <h1>ToDo</h1>
+        <form>
+            <div class="form-group">
+                <label for="titleInput">Task title</label>
+                <input type="text" class="form-control" id="titleInput">
+            </div>
+            <div class="form-group">
+                <label for="descriptionInput">Task decription</label>
+                <input type="text" class="form-control" id="descriptionInput" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="prioritySelect">Priority</label>
+                <select class="form-control" id="prioritySelect">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" id="createButton">Create</button>
+            <button type="submit" class="btn btn-primary form-edit-button" id="editButton">Edit</button>
+        </form>
+    </div>
+    <div class="cards-block" id="cardsBlock"></div>
+</div>
+
+
+<script src="scripts/main.js"></script>
+</body>
+</html>
