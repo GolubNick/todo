@@ -34,12 +34,16 @@
                     this.addCardToLocalStorage(cardData);
                     this.clearForm();
                 });
+
             this.editButton.addEventListener('click', event => {
+                event.preventDefault();
+
                 this.editedCardData.title = this.titleInput.value;
                 this.editedCardData.description = this.descriptionInput.value;
                 this.editedCardData.priority = this.prioritySelect.value;
-                event.preventDefault();
+
                 this.clearForm();
+                this.editedCard.updateCard();
             });
         }
 
@@ -60,9 +64,10 @@
             this.prioritySelect.value = 'Low';
         }
 
-        updateCard(cardData) {
-            this.editedCardData = cardData;
-            this.fillForm(cardData);
+        updateCard(card) {
+            this.editedCard = card;
+            this.editedCardData = card.cardData;
+            this.fillForm(this.editedCardData);
         }
 
         getAppElements() {
@@ -91,7 +96,6 @@
     class Card {
         constructor(cardData) {
             this.cardData = cardData;
-            this.priorityCard= cardData.priority;
             this.cardsBlock = document.querySelector('#cardsBlock');
             this.card = document.createElement('div');
             this.init();
@@ -113,27 +117,33 @@
             this.cardsBlock.removeChild(this.card);
         }
 
-        editCard() {
-            app.updateCard(this.cardData);
+        updateCard() {
+            this.card.innerHTML = this.cardHTML;
         }
 
-        createCard(cardData) {
-            this.card.classList.add('card');
+        editCard() {
+            app.updateCard(this);
+        }
 
-            let cardHTML = `<div class="card-body">
-                <span class="badge ${this.priorityClass}">${cardData.priority}</span>
-                <h5 class="card-title">${cardData.title}</h5>
-                <p class="card-text">${cardData.description}</p>
+        get cardHTML() {
+            return `<div class="card-body">
+                <span class="badge ${this.priorityClass}">${this.cardData.priority}</span>
+                <h5 class="card-title">${this.cardData.title}</h5>
+                <p class="card-text">${this.cardData.description}</p>
                 <a href="#" class="btn btn-primary complete-button">Complete</a>
                 <a href="#" class="btn btn-info edit-button">Edit</a>
                 <a href="#" class="btn btn-danger delete-button">Delete</a>
-            </div>`
-            this.card.innerHTML = cardHTML;
+            </div>`;
+        }
+
+        createCard() {
+            this.card.classList.add('card');
+            this.card.innerHTML = this. cardHTML;
             this.cardsBlock.append(this.card);
         }
 
         get priorityClass () {
-            switch (this.priorityCard) {
+            switch (this.cardData.priority) {
                 case 'High':
                     return 'badge-danger';
                     break;
@@ -153,7 +163,7 @@
         }
 
         init() {
-            this.createCard(this.cardData);
+            this.createCard();
             this.getCardElements();
             this.attachEvents();
         }
