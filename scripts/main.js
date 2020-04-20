@@ -8,7 +8,6 @@
             this.descriptionInput = this.element.querySelector('#descriptionInput');
             this.prioritySelect = this.element.querySelector('#prioritySelect');
             this.cardsDataArray = [];
-            this.cardsArray = [];
             this.init();
         }
 
@@ -16,7 +15,7 @@
             let storageData = localStorage.getItem('todoCards');
             if (storageData) {
                 this.cardsDataArray = JSON.parse(storageData);
-                this.cardsDataArray.forEach(cardData => this.cardsArray.push(new Card(cardData)));
+                this.cardsDataArray.forEach(cardData => new Card(cardData));
             }
         }
 
@@ -30,8 +29,9 @@
                         priority: this.prioritySelect.value
                     };
 
-                    this.cardsArray.push(new Card(cardData));
-                    this.addCardToLocalStorage(cardData);
+                    new Card(cardData);
+                    this.checkLocalStorage(cardData);
+                    this.updateStorage();
                     this.clearForm();
                 });
 
@@ -44,16 +44,20 @@
 
                 this.clearForm();
                 this.editedCard.updateCard();
+                this.updateStorage();
             });
         }
 
-        addCardToLocalStorage(cardData) {
+        checkLocalStorage(cardData) {
             let storageData = localStorage.getItem('todoCards');
             cardData.status = false;
             if (storageData){
                 this.cardsDataArray = JSON.parse(storageData);
             }
             this.cardsDataArray.push(cardData);
+        }
+
+        updateStorage() {
             let stringifyCardsArray = JSON.stringify(this.cardsDataArray);
             localStorage.setItem('todoCards', stringifyCardsArray);
         }
@@ -88,7 +92,6 @@
             this.getAppElements();
             this.attachEvents();
             this.checkStorage();
-            console.log(this.cardsArray);
             console.log(this.cardsDataArray);
         }
     }
@@ -138,7 +141,7 @@
 
         createCard() {
             this.card.classList.add('card');
-            this.card.innerHTML = this. cardHTML;
+            this.card.innerHTML = this.cardHTML;
             this.cardsBlock.append(this.card);
         }
 
