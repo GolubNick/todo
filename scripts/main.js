@@ -104,12 +104,15 @@
             this.init();
         }
 
-        attachEvents(){
+        attachEvents() {
             let deleteCardWrapper = this.deleteCard.bind(this);
             this.deleteButton.addEventListener('click', deleteCardWrapper);
 
             let editCardWrapper = this.editCard.bind(this);
             this.editButton.addEventListener('click', editCardWrapper);
+
+            let completeCardWrapper = this.completeCard.bind(this);
+            this.completeButton.addEventListener('click', completeCardWrapper);
         }
 
         deleteCard() {
@@ -124,6 +127,17 @@
             this.card.innerHTML = this.cardHTML;
         }
 
+        completeCard() {
+            this.cardData.status = true;
+            app.updateStorage();
+            this.completeButton.textContent = 'Completed';
+            this.completeButton.style.pointerEvents = 'none';
+            this.completeButton.style.opacity = '.5';
+            this.completeButton.className = 'btn btn-success complete-button';
+            this.editButton.style.pointerEvents = 'none';
+            this.editButton.style.opacity = '.5';
+        }
+
         editCard() {
             app.updateCard(this);
         }
@@ -133,8 +147,8 @@
                 <span class="badge ${this.priorityClass}">${this.cardData.priority}</span>
                 <h5 class="card-title">${this.cardData.title}</h5>
                 <p class="card-text">${this.cardData.description}</p>
-                <a href="#" class="btn btn-primary complete-button">Complete</a>
-                <a href="#" class="btn btn-info edit-button">Edit</a>
+                <a href="#" class="btn ${this.completeClass} complete-button" style="${this.completeStyles}">${this.completeText}</a>
+                <a href="#" class="btn btn-info edit-button" style="${this.completeStyles}">Edit</a>
                 <a href="#" class="btn btn-danger delete-button">Delete</a>
             </div>`;
         }
@@ -157,6 +171,18 @@
                     return 'badge-success';
                     break;
             }
+        }
+
+        get completeClass () {
+            return this.cardData.status ? 'btn-success' : 'btn-primary';
+        }
+
+        get completeStyles () {
+            return this.cardData.status ? 'pointer-events: none; opacity: .5' : '';
+        }
+
+        get completeText () {
+            return this.cardData.status ? 'Completed' : 'Complete';
         }
 
         getCardElements() {
