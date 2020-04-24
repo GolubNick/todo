@@ -29,6 +29,10 @@
                         priority: this.prioritySelect.value
                     };
 
+                    if (!this.checkForm()) {
+                        return;
+                    }
+
                     new Card(cardData);
                     this.checkLocalStorage(cardData);
                     this.updateStorage();
@@ -46,6 +50,15 @@
                 this.editedCard.updateCard();
                 this.updateStorage();
             });
+
+            this.titleInput.addEventListener('focus', event => {
+                event.preventDefault();
+                this.titleInput.classList.remove('is-invalid');
+            });
+            this.descriptionInput.addEventListener('focus', event => {
+                event.preventDefault();
+                this.descriptionInput.classList.remove('is-invalid');
+            });
         }
 
         checkLocalStorage(cardData) {
@@ -57,6 +70,30 @@
             this.cardsDataArray.push(cardData);
         }
 
+        checkForm() {
+            let formFieldsValues = [this.titleInput, this.descriptionInput];
+            let isValid = true;
+            let invalidFields = [];
+            formFieldsValues.forEach(field => {
+                if (!field.value) {
+                    isValid = false;
+                    invalidFields.push(field);
+                }
+            });
+            if (isValid) {
+                return true;
+            } else {
+                this.showInvalidFields(invalidFields);
+                return false;
+            }
+        }
+
+        showInvalidFields(invalidFields) {
+            invalidFields.forEach(field => {
+               field.classList.add('is-invalid');
+            });
+        }
+
         updateStorage() {
             let stringifyCardsArray = JSON.stringify(this.cardsDataArray);
             localStorage.setItem('todoCards', stringifyCardsArray);
@@ -66,6 +103,9 @@
             this.titleInput.value = '';
             this.descriptionInput.value = '';
             this.prioritySelect.value = 'Low';
+
+            this.createButton.style.display = 'block';
+            this.editButton.style.display = 'none';
         }
 
         updateCard(card) {
@@ -116,6 +156,7 @@
         }
 
         deleteCard() {
+            if (!confirm('Are you sure?')) return;
             let cardIndex = app.cardsDataArray.indexOf(this.cardData);
             app.cardsDataArray.splice(cardIndex, 1);
             let stringifyCardsArray = JSON.stringify(app.cardsDataArray);
@@ -124,7 +165,15 @@
         }
 
         updateCard() {
-            this.card.innerHTML = this.cardHTML;
+            let cardTitleNode = this.card.querySelector('.card-title');
+            let cardDescriptionNode = this.card.querySelector('.card-description');
+            let cardPriorityNode = this.card.querySelector('.badge');
+
+            cardTitleNode.textContent = this.cardData.title;
+            cardDescriptionNode.textContent = this.cardData.description;
+            cardPriorityNode.textContent = this.cardData.priority;
+
+            cardPriorityNode.className = `badge ${this.priorityClass}`;
         }
 
         completeCard() {
@@ -146,7 +195,7 @@
             return `<div class="card-body">
                 <span class="badge ${this.priorityClass}">${this.cardData.priority}</span>
                 <h5 class="card-title">${this.cardData.title}</h5>
-                <p class="card-text">${this.cardData.description}</p>
+                <p class="card-description">${this.cardData.description}</p>
                 <a href="#" class="btn ${this.completeClass} complete-button" style="${this.completeStyles}">${this.completeText}</a>
                 <a href="#" class="btn btn-info edit-button" style="${this.completeStyles}">Edit</a>
                 <a href="#" class="btn btn-danger delete-button">Delete</a>
